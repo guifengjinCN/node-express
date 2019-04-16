@@ -77,3 +77,13 @@ npm start // 查看是否成功
 pm2-node项目部署:
 
 本地首先在项目根目录添加一个`processes.json`,内容参考本项目,直接将本地写好的代码上传到服务器,之后在服务器输入`pm2 start processes.json`,好了?没错,就是这么简单,之前一直以为高大上...,实际验证: [获取角色列表(get)](http://120.79.239.41:3000/users/userList)
+
+##### 附增删改查:
+
+增: post ------- http://120.79.239.41:3000/users/addUser  params: {username: 'xxx', password: 'xxx'}
+
+删: get ------- http://120.79.239.41:3000/users/delUser
+
+改: post -------  http://120.79.239.41:3000/users/editUser params: {username: 'xxx', password: 'xxx', _id: 'xxx'}
+
+查: get ------ http://120.79.239.41:3000/users/userList
