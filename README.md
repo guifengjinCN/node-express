@@ -80,10 +80,10 @@ pm2-node项目部署:
 
 ##### 附增删改查:
 
-增: post ------- http://120.79.239.41:3000/users/addUser  params: {username: 'xxx', password: 'xxx'}
+增: post ------- http://120.79.239.41:3000/users/addUser  {username: 'xxx', password: 'xxx'}
 
 删: get ------- http://120.79.239.41:3000/users/delUser
 
-改: post -------  http://120.79.239.41:3000/users/editUser params: {username: 'xxx', password: 'xxx', _id: 'xxx'}
+改: post -------  http://120.79.239.41:3000/users/editUser {username: 'xxx', password: 'xxx', _id: 'xxx'}
 
 查: get ------ http://120.79.239.41:3000/users/userList
