@@ -48,6 +48,162 @@ npm start // 查看是否成功
     
     测试链接, 在`cmd`中输入`mongo`回车
     
+**mongodb操作**
+
+1. 数据库操作
+
+	1. 新增数据库
+	```
+	use 数据库名; //如果数据库名不存在则新建，如果存在则切换到该数据库。
+	```	
+	2. 查看数据库
+	```
+	show dbs; //查看当前服务器所有的数据库，如果数据库没有任何内容则不会显示出来
+	show databases; //同上
+	db; //查看当前正在使用的数据库
+	```
+	3. 删除数据库
+	```
+    db.dropDatabase(); //删除当前正在使用的数据库
+    ```
+	
+2. 集合操作
+
+    1. 新增集合
+    ```
+    db.集合名.insert({数据});
+    db.users.insert({"name":"张三","password":"123456"});
+    ```
+		
+    2. 查看集合
+
+    ```
+    show collections; 【掌握】//查看当前数据库中有哪些集合
+    ```
+		
+    3. 删除集合
+    ```
+    db.集合.drop(); //删除指定的集合
+    ```
+	
+3. 文档操作
+ 
+	1） 新增文档
+    ```
+	db.集合名.insert({JSON数据}); 【掌握】//【推荐使用insert】
+	db.users.save({"name":"李四","password":"llllisi"});
+	```
+		
+	.insert和 .save的区别：
+	
+	如果新增的数据中没有_id属性 两个命令的用法和效果完全一样。
+	
+	如果新增的数据中有 _id属性，如果不冲突效果也是一样都是新增。
+	
+	如果冲突：
+	.insert 会报错
+	.save 会修改
+	
+	2） 查看文档
+	```
+	db.users.find(); 【掌握】//查看集合中的所有文档
+	db.users.find({}); //按条件查询
+	db.users.find().pretty(); //将查询结果格式化后再显示
+	```
+	3） 删除文档
+	```
+	db.users.remove({"name":"李四"}); //删除符合条件的数据（文档）
+	db.users.remove({}); //删除所有数据
+	```	
+	注意： 在执行删除或修改命令时，一定谨慎！谨慎！再谨慎！
+	
+	4） 修改文档
+	
+    	db.users.update({按条件查询要修改的数据},{将数据修改成什么样}); //根据条件查询数据再修改
+    	db.users.update({按条件查询要修改的数据},{$set:{将数据修改成什么样}}); //改一部分
+    	db.users.save({"_id":id值,'name':"值"}); //将指定ID的数据修改成后面内容
+
+        1. 按条件查询
+	    db.集合名.find(); //查看当前集合的所有数据
+	    db.集合名.find({条件}); //按条件查询
+
+    	    1） 按指定的值查询数据【重点】
+    		db.集合名.find({"属性名":"值"});
+    		db.集合名.find({"属性名":正则表达式}); //模糊查询
+    		
+    		示例：
+    		db.list.find({"sex":"女"});
+    		
+        	2） 查询小于或大于指定值的数据 $lt
+        		db.list.find({"属性名":{$lt:"值"}}); //小于
+        		db.list.find({"属性名":{$gt:"值"}}); //大于
+        		
+        		示例：
+        		db.list.find({"age":{$lt:30}}); //查询年龄小于30岁的所有数据
+        		
+        	3） 查询小于等于指定值的数据 $lte
+        		db.list.find({"属性名":{$lte:"值"}}); //小于等于
+        		db.list.find({"属性名":{$gte:"值"}}); //大于等于
+        		
+        		db.list.find({"age":{$lte:32}});
+        		//SQL: select * from list where age <= 32
+        
+        	4）区间查询
+        		db.list.find({"属性名":{$gt:"值",$lt:"值"}})
+        	
+        		db.list.find({"age":{$gt:30 , $lt:40}}); //查询年龄在 30 -- 40 之间的所有数据
+        		//SQL： select * from list where age>30 and age<40
+        		
+        	5） 不等于 $ne
+        		db.list.find({"country":{$ne:"中国"}});
+        		//SQL： select * from list where country <> '中国'
+        		
+        	6）$in子句【重点】
+        		db.list.find({"属性名":{$in:['值1','值2','值n']}}); //按指定的数组进行匹配，只匹配到数组中指定的数据
+        		
+        		示例：
+        		db.list.find({"name":{$in:['刘德华','刘欢','周杰伦','刘备']}}); //查询刘德化、刘欢、周杰伦、刘备
+        		//SQL: select * from list where name in ('刘德华','刘欢','周杰伦','刘备')
+        
+        	7） $nin子句
+        		db.list.find({"属性名":{$nin:['值1','值2','值n']}}); //查询所有没有集合中出现的数据
+        		
+        	8） $size匹配
+        		db.list.find({"works":{$size:3}}); //匹配works的值长度是3的数据，works的值必须是数组
+        		
+        	9） $or 或者子句【重点】
+        		db.list.find({$or:[{"属性名":"值"},{"属性名":"值"}]}); //不同属性名任意一个匹配上都查询出来
+        		
+        		//[同一个属性，不同的值] 查看年龄是32 或者 年龄是55 的数据
+        		db.list.find({$or:[{"age":32},{"age":55}]});
+        		//SQL: select * from list where age=32 or age=55
+        		
+        		//[不同属性，不同值] 查看年龄是32 或者 性别是男的
+        		db.list.find({$or:[{"age":32},{"sex":"男"}]});
+        
+        2. 排序sort【重点】
+        	db.集合名.find().sort({"属性名":排序编号});
+        		排序编号：
+        			1	升序：从小到大
+        			-1	降序：从大到小
+        	
+        	db.list.find().sort({"age":1}); //按年龄进行从小到大排序
+        	db.list.find().sort({"age":1,"score":-1}); //两个属性排序，如果第一个属性无法判断先后，可以使用第二个属性
+        	
+        	//SQL: select * from list order by age asc,score desc;
+        	
+        3. 其它【重点】
+        	1） .skip	跳过指定的数据
+        		.skip(n)
+        		
+        		db.list.find().skip(10); //跳过10条数据，从第11条数据开始输出
+        		
+        	2） .limit限定输出条数
+        		.limit(n)
+        		
+        		db.list.find().skip(10).limit(1); //跳过10条数据，从第11条数据开始输出1条
+	        注意： 使用这些子句可以实现分页功能
+    
 #### 目录结构说明
 ```
 +-- bin/                                    ---项目入口文件,之前是app.js
