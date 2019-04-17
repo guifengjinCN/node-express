@@ -238,7 +238,7 @@ pm2-node项目部署:
 
 增: post ------- http://120.79.239.41:3000/users/addUser  {username: 'xxx', password: 'xxx'}
 
-删: get ------- http://120.79.239.41:3000/users/delUser?
+删: get ------- http://120.79.239.41:3000/users/delUser?id=5cb5836967dbe621cc74c03f
 
 改: post -------  http://120.79.239.41:3000/users/editUser {username: 'xxx', password: 'xxx', _id: 'xxx'}
 
